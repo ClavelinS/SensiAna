@@ -182,6 +182,76 @@ Vous pouvez mettre des jeux de paramètres en favoris. Double-cliquer dessus vou
 
 Exporter une backup export aussi les favoris avec leur couleur et leur position dans l'ordre des favoris.
 
+### Visualisation en coordonnées parallèles
+
+#### Qu’est-ce qu’un diagramme en coordonnées parallèles ?  
+Un diagramme en **coordonnées parallèles** est une méthode de visualisation permettant de représenter **simultanément plusieurs paramètres** (ou variables) d’un jeu de données multidimensionnel.  
+
+- Chaque **paramètre** est représenté par un **axe vertical parallèle**.  
+- Chaque **ligne** traversant ces axes correspond à un **point de donnée** (une combinaison de valeurs pour chaque paramètre).  
+- La position de la ligne sur chaque axe indique la valeur du point pour ce paramètre.  
+
+>L’objectif est de **comparer visuellement des profils** et de repérer des corrélations, des regroupements ou des comportements particuliers.
+
+#### Structure du graphique  
+- **Axes verticaux** : chacun représente un paramètre du modèle (ex. température, pression, vitesse, etc.).  
+- **Lignes colorées** : chaque ligne correspond à un point de donnée.  
+  - La **couleur** indique la valeur de la fonction `f` (colonne choisie comme critère de couleur).  
+  - Les lignes **grisées** correspondent aux points **hors des bornes choisies** (filtrage par valeurs min/max).  
+- **Échelle de couleur** : affichée à droite, elle relie les couleurs des lignes aux valeurs de la fonction.
+
+#### Comment lire le graphique ?  
+Prenons un exemple :  
+- Supposons que nous ayons 4 paramètres `A`, `B`, `C`, `D`.  
+- Une ligne traverse successivement les axes `A`, `B`, `C`, `D`.  
+- La position verticale de la ligne sur chaque axe montre la valeur du point pour ce paramètre.  
+
+> Si plusieurs lignes suivent un **trajet similaire**, cela peut indiquer :  
+>- Une **corrélation** entre certains paramètres (ex. quand `A` augmente, `C` tend aussi à augmenter).  
+>- Des **profils typiques** (groupes de points proches).  
+>- Des **outliers** (lignes très différentes des autres).
+
+#### Contrôles disponibles dans l’interface  
+
+##### Filtrage par valeurs min/max  
+En bas de la fenêtre, vous trouvez deux champs numériques :  
+- **Min** : valeur minimale autorisée pour la fonction `f`.  
+- **Max** : valeur maximale autorisée.  
+
+Vous pouvez entrer des bornes et cliquer sur **Apply** pour mettre à jour le graphique :  
+- Les lignes correspondant à des points **dans l’intervalle [Min, Max]** sont affichées en couleur.  
+- Les lignes correspondant à des points **hors de l’intervalle** sont affichées en gris.
+
+>Exemple : entrer `Min = 0.5`, `Max = 1.2` permet de ne visualiser que les solutions dont `f` est compris dans cet intervalle.
+
+##### Réinitialiser le filtre  
+Le bouton **Reset** rétablit les bornes globales (valeurs minimum et maximum de `f` sur tout le jeu de données).
+
+##### Exporter le graphique  
+Le bouton **Exporter** permet de sauvegarder le graphique :  
+- **PNG** : image statique du graphique.  
+- **HTML** : version interactive ouvrable dans un navigateur (avec zoom, rotation, infobulles).  
+
+#### Bonnes pratiques de lecture  
+
+- **Identifier les plages de valeurs intéressantes** : utiliser le filtre pour réduire l’affichage aux solutions pertinentes.  
+- **Comparer les tendances** : suivre la forme des lignes pour voir si certaines variables évoluent ensemble.  
+- **Détecter les anomalies** : chercher les lignes isolées ou très différentes.  
+- **Analyser les clusters visuellement** : regrouper mentalement les profils qui se ressemblent.  
+
+#### Limites de la méthode  
+- Le graphique peut devenir **difficile à lire si le nombre de points est très élevé** (beaucoup de lignes qui se chevauchent).  
+- L’interprétation demande de l’expérience : certaines corrélations ne sont pas toujours évidentes.  
+- Les échelles de chaque axe étant indépendantes, il faut se rappeler que les comparaisons visuelles entre paramètres sont **relatives**.
+
+#### Sélectionner un intervalle de passage
+Cliquer-glisser sur un axe permet de griser toutes les lignes ne passant pas par l'intervalle dessiné par le clique-glisse (un trait rose se déssine). Vous pouvez le faire sur différents axes à la fois et les faire se déplacer en cliquant-glissant dessus. Pour réinitialiser sur un axe, clique gauche sur l'intervalle dessiné sur l'axe.
+Exemple :
+![Exemple d'utilisation de cet outil](parTabIntervalNative.png)
+
+#### En résumé  
+Les coordonnées parallèles sont un outil puissant pour **explorer des données multidimensionnelles**, identifier des tendances, comparer des profils et repérer des valeurs atypiques. L’interface fournie vous permet de filtrer, réinitialiser et exporter facilement vos visualisations.
+
 ### Analyse statistique
 Vous fournis de VRAIS arguments à donner au destinataire des calculs.
 #### Introduction à l'analyse de sensibilité
