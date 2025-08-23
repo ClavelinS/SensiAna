@@ -1,3 +1,6 @@
+# python libs for offline installation (pass them bi zip)
+py_libs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -135,10 +138,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+.myEnv
 .envrc
 .venv
-env/
+myEnv/
 venv/
 ENV/
 env.bak/

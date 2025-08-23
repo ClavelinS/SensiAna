@@ -1,0 +1,16 @@
+#graph part
+title = "test"
+axis_name = ["coord x", "coord y", "coordzz", "test", "Jolie typographie"]
+axis_borders = [[-1,2], [0,5], [0,1.5], [0,2]]
+axis_step = [40,30,60,40] #limited to 10**6 at total
+
+#critical value part
+critical_value = [0.8] #one value if criterium is 'over' or 'under', two values if criterium is 'out' our 'in' (first is the lower bound, second is the upper bound)
+criterium = "over" #what to watch out : when the function is over the critical value or under ; can either be 'under', 'over', 'out' or 'in'
+
+#sensitivity analysis part
+high_precision_analysis = 0
+n_sample = 0 #if 0 then default (1024) ; it's better to be a power of 2
+
+#backup part
+backup = "" # "D:\\SCLAVELI\\projects_python\\etude_sensi\\BackupFile.txt"
