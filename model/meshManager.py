@@ -8,9 +8,8 @@ from model.checkData import CheckData
 from theFunc import theFunction
 import pandas as pd
 import gc
-from concurrent.futures import ProcessPoolExecutor
-import sys
 from multiprocessing import Process, Queue
+from model.progBar import ProgressionBar
 
 class MeshManager:
     def __init__(self,axis_borders:list[list[float]]=[]):
@@ -29,9 +28,7 @@ class MeshManager:
 
         self.backUpParser = None
         if self.data.dataFile.backup != Path():
-            print("Loading backup file ...")
             self.backUpParser = BackUpParser()
-            print("\nBackup file loaded !")
             self.backUpParser.writeDataBackUpToml()
         
         check_data = CheckData()
@@ -88,10 +85,14 @@ class MeshManager:
         self.data.dataFile.n_sample = min(self.data.dataFile.n_sample, np.prod(self.map.shape))
 
         last_node_value = 0
+        if self.backUpParser:
+            starting_msg = "Starting loading values to plot the graph ..."
+        else:
+            starting_msg = "Starting computing values to plot the graph ..."
+        progressionBar = ProgressionBar(np.prod(self.map.shape), starting_msg=starting_msg, ending_msg="Values done !")
 
         for indices, _ in np.ndenumerate(self.map): #indices : tuple like
             axis_values = self.fromIndicesToCoordinates(indices)
-
             try:
                 if self.backUpParser:
                     nodeValue = self.backUpParser.map[indices]
@@ -127,6 +128,7 @@ class MeshManager:
 
             finally:
                 self.map[indices] = nodeValue
+                progressionBar.next()
 
             if self.backUpParser:
                 self.backUpParser=None

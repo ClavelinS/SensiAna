@@ -4,6 +4,7 @@ import numpy as np
 import sys
 import re
 from model.fav import Favorites
+from model.progBar import ProgressionBar
 
 __DEFAULT_N_SAMPLE__ = 1024
 __MAX_STEP__ = 10**6
@@ -74,7 +75,6 @@ class BackUpParser:
             upper_bounds = []
             lower_bounds = []
             n_lines = 0
-            last_percent_printed = -1 #last percentage printed
             for line in f:
                 parsed_line = line.split(",")
                 if line_index==0:
@@ -92,6 +92,7 @@ class BackUpParser:
                     #creating the matrix
                     self.map = np.zeros(shape=map_size)
                     n_lines = np.prod(self.map.shape)
+                    progressionBar = ProgressionBar(n_lines, starting_msg="Loading backup file ...", ending_msg="Backup file loaded !")
                 elif line_index==3:
                     # line 3 : axis upper bound
                     upper_bounds = [float(upper_bound) for upper_bound in parsed_line[:-1]]
@@ -122,24 +123,22 @@ class BackUpParser:
                     indices = [int(index) for index in parsed_line[:-2]]
                     value = float(parsed_line[-2])
                     self.map[tuple(indices)]=value
-                    if n_lines != 0:
-                        percentage = int((line_index-self.data.first_line_mesh_backup_file)/n_lines*100)
-                        if percentage > last_percent_printed:
-                            last_percent_printed = percentage
-                            self.print_progress_bar(percentage+1)
+                    progressionBar.next()
 
                 line_index+=1
         
         return None
     
     def writeDataBackUpToml(self) -> None:
-        '''write the data.toml for the backup data'''
+        '''edits the data.toml for the backup data'''
         file = dict() #pas utile lol
         file["title"] = self.data.dataFile.title
         file["axis_name"] = self.data.dataFile.axis_name
 
         file["axis_borders"] = self.data.dataFile.axis_borders
         file["axis_step"] = self.data.dataFile.axis_step
+
+        file["max_computation_time"] = self.data.dataFile.max_computation_time
 
         file["critical_value"] = self.data.dataFile.critical_value
         file["criterium"]  = self.data.dataFile.criterium#what to watch out : when the function is over the critical value or under ; can either be 'under', 'over', 'out' or 'in'
@@ -173,39 +172,4 @@ class BackUpParser:
             f.writelines(lines)
 
         return None
-    
-    def print_progress_bar(self, percentage, width=100):
-        """
-        Barre de progression avec :
-        - barre remplie en vert,
-        - tête en bleu clair,
-        - tirets restants en rose,
-        - pourcentage en bleu clair.
-        """
-        # Bornage entre 0 et 100
-        percentage = max(0, min(100, percentage))
-
-        filled = int((percentage/100) * width)
-        empty = width - filled
-
-        GREEN = "\033[92m"
-        PINK = "\033[95m"
-        LIGHT_BLUE = "\033[94m"
-        RESET = "\033[0m"
-
-        bar = ""
-        if filled > 0:
-            bar += GREEN + "/" * (filled - 1)
-            bar += LIGHT_BLUE + ">"
-        else:
-            # Si rien rempli, pas de barre verte ni tête, direct rose
-            pass
-        bar += PINK + "-" * empty
-        bar += RESET
-
-        percent_str = f"{percentage}%"
-        percent_str_colored = "(" + LIGHT_BLUE + percent_str + RESET + ")"
-
-        sys.stdout.write(f"\r[{bar}] {percent_str_colored}")
-        sys.stdout.flush()
             
