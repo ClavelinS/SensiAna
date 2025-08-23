@@ -101,7 +101,7 @@ class MainPresenter:
                 if self.mesh.theCriticalFunc(value):
                     critical_ij.append((i, j))
 
-        self.view.visu_tab.plot_surface(Xj, Xi, Z, threshold=self.data.dataFile.critical_value, critical=critical_ij)
+        self.view.visu_tab.plot_surface(Xi, Xj, Z, threshold=self.data.dataFile.critical_value, critical=critical_ij)
 
     def query_model(self, coord):
         return self.mesh.map[coord]

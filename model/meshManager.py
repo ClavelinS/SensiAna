@@ -8,6 +8,9 @@ from model.checkData import CheckData
 from theFunc import theFunction
 import pandas as pd
 import gc
+from concurrent.futures import ProcessPoolExecutor
+import sys
+from multiprocessing import Process, Queue
 
 class MeshManager:
     def __init__(self,axis_borders:list[list[float]]=[]):
@@ -63,7 +66,7 @@ class MeshManager:
             raise Exception("No point in continuing, aborting everything.")
         
         return None
-    
+       
     def _createMesh(self) -> None:
         '''create the mesh'''
         self.axis = []
@@ -85,26 +88,49 @@ class MeshManager:
         self.data.dataFile.n_sample = min(self.data.dataFile.n_sample, np.prod(self.map.shape))
 
         last_node_value = 0
-        for indices, value in np.ndenumerate(self.map): #indices : tuple like ; value is not used ;;;;;;;;; TODO : sans doute optimisable
+
+        for indices, _ in np.ndenumerate(self.map): #indices : tuple like
             axis_values = self.fromIndicesToCoordinates(indices)
+
             try:
-                if not self.backUpParser:
-                    nodeValue = self.theFunction(axis_values)
-                else:
+                if self.backUpParser:
                     nodeValue = self.backUpParser.map[indices]
+                elif self.data.dataFile.max_computation_time <= 0:
+                    nodeValue = self.theFunction(axis_values)
+                else : #timeout set by the user
+                    queue = Queue()
+                    p = Process(target=theFunctionInQueue, args=(axis_values, queue)) #takes less than 10s
+                    p.start()
+                    p.join(timeout=self.data.dataFile.max_computation_time)
+
+                    if p.is_alive():
+                        p.kill()
+                        p.join()
+                        raise TimeoutError(f"Le calcul du noeud a dépassé le temps imparti ({self.data.dataFile.max_computation_time}s).")
+                    
+                    #if it went great
+                    if not queue.empty():
+                        nodeValue = queue.get()
+                    else:
+                        nodeValue = last_node_value
+                        raise ValueError
+
+                #all went good
                 if self.theCriticalFunc(nodeValue):
                     self.critical_domain.append(indices)
                     last_node_value = nodeValue
-            except Exception as e:
-                print(f"The node at {axis_values} couldn't be computed, here is the reason Python got :\n{e}")
+                
+            except (Exception, TimeoutError) as e:
+                print(f"Le noeud à {[float(axis_value) for axis_value in axis_values]} n'a pas pu être calculé. Raison : {e}")
                 self.aborted_domain.append(indices)
                 nodeValue = last_node_value
 
-            self.map[indices] = nodeValue
+            finally:
+                self.map[indices] = nodeValue
 
-        if self.backUpParser:
-            self.backUpParser=None
-            gc.collect() #freeing memory
+            if self.backUpParser:
+                self.backUpParser=None
+                gc.collect() #freeing memory
 
         return None
     
@@ -286,3 +312,8 @@ class MeshManager:
         data_dict['f'] = self.map.ravel()
 
         return pd.DataFrame(data_dict)
+
+def theFunctionInQueue(coords, queue) -> None:
+    res = theFunction(coords)
+    queue.put(res)
+    return None

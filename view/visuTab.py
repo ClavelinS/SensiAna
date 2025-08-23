@@ -309,7 +309,7 @@ class VisuTab(QWidget):
             y=y,
             z=z,
             surfacecolor=critic_mask,
-            colorscale=[[0, "green"], [1, "red"]],
+            colorscale=[[0, "green"], [0.4999, "green"], [0.5, "red"], [1, "red"]],
             cmin=0,
             cmax=1,
             showscale=False

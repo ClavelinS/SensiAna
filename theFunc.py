@@ -1,10 +1,14 @@
 import numpy as np
+import time
 
 def theFunction(args:np.ndarray[float] | list[float] | tuple[float]) -> float:
     '''
     this is the function to use, please match args type and results type
     to be general, this function takes in an array or list or whatever iterable, whatever the length is ; put your arguments in here
     '''
+    if args[0] < -0.8 and args[1] < 0.1 and args[2] < 1.1:
+        time.sleep(0)
+        return 0
     return np.sin(args[0]+args[1])*args[2]+0.0001*args[3]
     # term_x = np.where(args[0] < 0.0, 10 * np.sin(3 * args[0]), 0)
     # term_y = np.where((args[1] > 2) & (args[1] < 4), 8 * np.cos(2 * args[1]), 0)

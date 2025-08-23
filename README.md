@@ -96,6 +96,7 @@ axis_step = [40,30,60, 40] # limited to 10**6 at total
 - **`axis_name`** : Liste des noms pour chaque axe.
 - **`axis_borders`** : Bornes min/max pour chaque axe, sous forme `[min, max]`.
 - **`axis_step`** : Nombre de points par axe. Le produit de tous les pas ne doit pas dépasser `10⁶` (sinon, la visualisation sera trop lourde).
+- **`max_computation_time`** : Le temps en secondes de calcul maximum autorisé pour chaque calcul de noeud individuellement. Si ce temps est dépassé, alors le processus sera killé, le noeud sera traité comme avorté et le code passera au calcul du prochain noeud. Mettre une valeur nulle ou négative ne fixe pas de limite de temps. ATTENTION : En activant cette option (mettre un nombre plus grand que 0) un temps additionnel de maximum 10s sera à prévoir au calcul de chaque noeud. Evitez donc d'activer cette option si les calculs sont nombreux et court. À activer quand les calculs externes ont une chance de boucler à l'infini ou que les temps sont relativement longs ou que le nombre de calcul est faible.
 
 ---
 
@@ -162,7 +163,7 @@ Une jolie barre de progression montre son avancement.
 C'est pour utiliser le logiciel.
 
 ### Visualisation
-Affiche par défaut un graph 3D de la valeur cible en fonction des deux premiers paramètres. Les autres paramètres sont modifiables via les slider sur le côté gauche du logiciel. Pour tracer la valeur cible en fonction d'un autre paramètre que celui déjà utilisé, choisissez-le dans le menu déroulant en haut de la fenêtre puis cliquez sur `Valider`.
+Affiche par défaut un graph 3D de la valeur cible en fonction des deux premiers paramètres. Les autres paramètres sont modifiables via les slider sur le côté gauche du logiciel. Pour tracer la valeur cible en fonction d'un autre paramètre que celui déjà utilisé, choisissez-le dans le menu déroulant en haut de la fenêtre puis cliquez sur `Valider`. En vert les vleurs non-critiques, en rouge les valeurs critiques.
 
 #### Contrôles
 Sur le graph :

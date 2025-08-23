@@ -2,7 +2,8 @@
 title = "test"
 axis_name = ["coord x", "coord y", "coordzz", "test", "Jolie typographie"]
 axis_borders = [[-1,2], [0,5], [0,1.5], [0,2]]
-axis_step = [40,30,60,40] #limited to 10**6 at total
+axis_step = [4,3,6,4] #limited to 10**6 at total, you might want it at least 10
+max_computation_time = 0 #in seconds
 
 #critical value part
 critical_value = [0.8] #one value if criterium is 'over' or 'under', two values if criterium is 'out' our 'in' (first is the lower bound, second is the upper bound)

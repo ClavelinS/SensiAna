@@ -2,6 +2,7 @@ import tomllib
 from pathlib import Path
 import numpy as np
 import sys
+import re
 from model.fav import Favorites
 
 __DEFAULT_N_SAMPLE__ = 1024
@@ -46,6 +47,8 @@ class DataFile:
 
         self.axis_borders:list[list[float]] = self.file["axis_borders"]
         self.axis_step:list[int] = self.file["axis_step"]
+
+        self.max_computation_time:float = self.file["max_computation_time"]
 
         self.critical_value:list[float] = self.file["critical_value"]
         self.criterium:str = self.file["criterium"] #what to watch out : when the function is over the critical value or under ; can either be 'under', 'over', 'out' or 'in'
@@ -130,7 +133,7 @@ class BackUpParser:
         return None
     
     def writeDataBackUpToml(self) -> None:
-        '''write the data.toml from the backup data'''
+        '''write the data.toml for the backup data'''
         file = dict() #pas utile lol
         file["title"] = self.data.dataFile.title
         file["axis_name"] = self.data.dataFile.axis_name
@@ -162,7 +165,6 @@ class BackUpParser:
             if isinstance(file[key], str) :
                 lines.append(key + ' = "' + file[key] + '"\n')
             elif isinstance(file[key], Path):
-                import re
                 lines.append(key + ' = "' + re.sub(r"\\", r"\\\\", file[key].__str__()) + '"\n')
             else:
                 lines.append(f"{key} = {file[key]}\n")
