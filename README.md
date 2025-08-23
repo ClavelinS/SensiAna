@@ -314,6 +314,7 @@ Pour chaque paramètre : Outil alternatif calculant pour chaque valeur de ce par
 Ces outils sont complémentaires. Utilisés ensemble, ils permettent de comprendre en profondeur **comment un système réagit aux changements de ses paramètres**, et donc de prendre de **meilleures décisions d’optimisation, de conception ou de simplification.**
 
 ## Dev à venir
+Vous pouvez voir ici les dev à venir, si un vous interesse particulièrement, n'hésitez pas à me le faire savoir, ça pourra me motiver à le faire en priorité :)
 
 ### Court terme
   - Dans les boîtes déployables de l'onglet d'analyse : quand replié affiche le tooltip et supprime les tooltip car apparaissent tout le temps c'est relou ;
