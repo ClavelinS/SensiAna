@@ -89,7 +89,7 @@ class MeshManager:
             starting_msg = "Starting loading values to plot the graph ..."
         else:
             starting_msg = "Starting computing values to plot the graph ..."
-        progressionBar = ProgressionBar(np.prod(self.map.shape), starting_msg=starting_msg, ending_msg="Values done !")
+        progressionBar = ProgressionBar(np.prod(self.map.shape), starting_msg=starting_msg, ending_msg="Values done !", style="Blocks")
 
         for indices, _ in np.ndenumerate(self.map): #indices : tuple like
             axis_values = self.fromIndicesToCoordinates(indices)
