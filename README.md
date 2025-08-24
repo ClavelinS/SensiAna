@@ -5,7 +5,7 @@ Le but de ce document est d'aider à l'utilisation du logiciel d'étude de sensi
 
 Vous avez un modèle compliqué ? Avec beaucoup de paramètres ? Et vous voulez comprendre l'influence des paramètres sur le résultat du modèle ? La visualiser ? Et la caractériser ? La quantifier ?
 
-Ce logiciel est fait pour vous ! Il réalise un étude de sensibilité en créant des jeux de paramètres sur ceux que vous voulez étudier.
+Ce logiciel est fait pour vous ! Il réalise un étude de sensibilité en créant des jeux de paramètres sur ceux que vous voulez étudier. 0 easter egg btw
 
 ## Préparation de l'environnement
 Pour utiliser le code et minimiser les erreurs. L'installation de *Python* est laissée à l'utilisateur (3.11 ou 3.13 clé en main).
@@ -70,6 +70,30 @@ Mettez ce fichier à la racine. Ouvrez le fichier `theFunc.py` et écrivez-y dan
 return myFunc(arg[0], arg[1], arg[2])
 ```
 
+**Cas particulier** -- Certains logiciels (AMEsim) utilisent leur propre version de Python, en particulier pour les fonctions qui interragissent avec le-dit logiciel de simulation. À ce moment là, je vous conseille dans `myFile.py` d'écrire une fonction qui écrit la valeurs des arguments dans un fichier, puis appelle un batch et lis les résultats dans un autre fichier et les *return* (donc `theFunction` les récuperera). Le batch lancera un fichier Python avec la version de Python du logiciel de simulation, ce fichier Python récupère les arguments depuis le fichier créé en amont puis lance la simulation et enfin écrit les résultats dans le fichier qui sera lu par la fonction de `myFile.py`, comme décrit à la fin de la précédente phrase.
+
+Toujours dans ce cas particulier, vous pourriez vouloir mettre une limite de temps de calcul avec `max_computation_time` du `data.toml`. Vous pouvez, c'est là pour ça, mais c'est déconseillé (ça ralentit fortement le code, il garantie pas loin de $10s$ minimum de temps de calcul par itération, faites les comtpes). Mais je peux vous proposer une alternative :) Vous utiliserez sans doute la bibliothèque subprocess afin de lancer le `.bat` dont je vous ai parlé dans le paragraphe plus haut. Ecrivez plutôt
+```python
+import subprocess
+import time
+
+# Lance le batch (sous Windows)
+process = subprocess.Popen(
+    ["cmd", "/c", "mon_script.bat"], #modifier le nom du script
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE
+)
+
+try:
+    stdout, stderr = process.communicate(timeout=300)  # 5 minutes, À ajuster
+    print("Terminé :", stdout.decode())
+except subprocess.TimeoutExpired:
+    print("Temps dépassé, on arrête le processus")
+    process.kill()
+    stdout, stderr = process.communicate()
+```
+c'est propre, intégré à `subprocess` nativement donc ne rajoute pas de temps contrairement à la méthode employée dans mon logiciel. Fortement conseillé. Ca devrait marcher quasi tel quel.
+
 ### Paramétrer le logiciel
 Pour calibrer le logiciel au problème que vous souhaitez étudier.
 #### [Optionnel] Lire un *toml*
@@ -113,10 +137,10 @@ criterium = "over"
   - Une valeur -> avec `over` ou `under`
   - Deux valeurs -> avec `in` ou `out`
 - **`criterium`** : Mode de détection :
-  - `"over"` : zones où la valeur est supérieure au seuil
-  - `"under"` : zones où la valeur est inférieure au seuil
-  - `"in"` : zones où la valeur est entre deux seuils (`[val1, val2]`)
-  - `"out"` : zones où la valeur est en dehors de ces deux seuils
+  - `"over"` : zones où la valeur est supérieure au seuil ;
+  - `"under"` : zones où la valeur est inférieure au seuil ;
+  - `"in"` : zones où la valeur est entre deux seuils (`[val1, val2]`) ;
+  - `"out"` : zones où la valeur est en dehors de ces deux seuils.
 
 ---
 
@@ -160,7 +184,7 @@ Afin d'ouvrir le logiciel à partir de données déjà calculées, dans le `data
 Une jolie barre de progression montre son avancement.
 
 ## Utiliser le logiciel
-C'est pour utiliser le logiciel.
+Cette section c'est pour utiliser le logiciel.
 
 ### Visualisation
 Affiche par défaut un graph 3D de la valeur cible en fonction des deux premiers paramètres. Les autres paramètres sont modifiables via les slider sur le côté gauche du logiciel. Pour tracer la valeur cible en fonction d'un autre paramètre que celui déjà utilisé, choisissez-le dans le menu déroulant en haut de la fenêtre puis cliquez sur `Valider`. En vert les vleurs non-critiques, en rouge les valeurs critiques.
