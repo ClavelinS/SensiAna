@@ -1,6 +1,10 @@
 # python libs for offline installation (pass them bi zip)
 py_libs
 
+# to export
+to_export
+to_export.7z
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

@@ -1,4 +1,4 @@
-# MANUEL UTILISATEUR SensiAna -- V1.0.0
+# MANUEL UTILISATEUR SensiAna -- V2.1.0
 Le but de ce document est d'aider à l'utilisation du logiciel d'étude de sensibilité. Pour lire correctement ce fichier, ouvrez-le dans VisualStudio Code et appuyez sur `Ctrl+Maj+V`.
 
 > **N.B.** -- Lancer le logiciel avec un thème système clair. 
